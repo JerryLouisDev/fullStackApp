@@ -1,11 +1,12 @@
 'use strict';
 
-// load modules
+// import statement
 const express = require('express');
 const morgan = require('morgan');
 const { sequelize } = require('./models/index');
 const userRoutes = require('./routes/users');
 const courseRoutes = require('./routes/courses');
+const cors = require('cors');
 
 // variable to enable global error logging
 const enableGlobalErrorLogging = process.env.ENABLE_GLOBAL_ERROR_LOGGING === 'true';
@@ -17,6 +18,7 @@ const app = express();
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
+app.use(cors());
 
 (async () =>{
   try{

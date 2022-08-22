@@ -17,7 +17,7 @@ exports.authenticateUser = async (req, res, next) => {
       raw: true,
       where: { emailAddress: credentials.name },
     });
-   console.log(user);
+   console.log("this is the user",user);
     if (user) {
       // Use the bcrypt npm package to compare the user's password
       const authenticated = await bcrypt.compare(

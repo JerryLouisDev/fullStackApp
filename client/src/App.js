@@ -1,3 +1,4 @@
+//import statements for all components and modules for App.js
 import React from 'react';
 import "./App.css";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
@@ -11,6 +12,9 @@ import Courses from "./components/Courses";
 import CourseDetail from "./components/CourseDetail";
 import CreateCourse from "./components/CreateCourse";
 import UpdateCourse from "./components/UpdateCourse";
+import NotFound from "./components/NotFound";
+import ErrorPage from "./components/ErrorPage";
+import Forbidden from "./components/Forbidden";
 
 import withContext from "./Context";
 import PrivateRoute from "./PrivateRoute";
@@ -43,6 +47,10 @@ function App() {
         <Route path="/signin" component={UserSignInWithContext} />
         <Route path="/signup" component={UserSignUpWithContext} />
         <Route path="/signout" component={UserSignOutWithContext} />
+        <Route path="/notfound" component={NotFound} />
+        <Route path="/error" component={ErrorPage} />
+        <Route path="/forbidden" component={Forbidden} />
+        <Route component={NotFound} />
       </Switch>
     </div>
   </Router>

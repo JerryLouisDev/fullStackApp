@@ -8,6 +8,7 @@ const userRoutes = require('./routes/users');
 const courseRoutes = require('./routes/courses');
 const cors = require('cors');
 
+
 // variable to enable global error logging
 const enableGlobalErrorLogging = process.env.ENABLE_GLOBAL_ERROR_LOGGING === 'true';
 
@@ -20,11 +21,13 @@ app.use(express.json());
 app.use(express.urlencoded({extended:false}));
 app.use(cors());
 
+
 (async () =>{
   try{
     await sequelize.authenticate();
     console.log('Connection to the database was successful!');
     await sequelize.sync();
+    // this prop deletes all the users{force : true}
     console.log('model sync sucessful');
   }
   catch(error){
@@ -63,7 +66,7 @@ app.use((err, req, res, next) => {
 });
 
 // set our port
-app.set('port', process.env.PORT || 5000);
+app.set('port', process.env.PORT || 9000);
 
 
 // start listening on our port

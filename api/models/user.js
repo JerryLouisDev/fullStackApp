@@ -52,8 +52,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         set(val) {
-          const hashedPassword = bcrpyt.hashSync(val, 10);
-          this.setDataValue("password", hashedPassword);
+          if(val){
+                const hashedPassword = bcrpyt.hashSync(val, 10);
+                this.setDataValue("password", hashedPassword);
+          }
         },
         validate: {
           notNull: {

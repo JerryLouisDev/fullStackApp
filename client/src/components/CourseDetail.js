@@ -5,31 +5,31 @@ import ReactMarkdown from "react-markdown";
 import axios from "axios";
 import Errors from "./Errors";
 
-export default function CourseDetail({context , history})  {
-    //This stores the errors and courses
-    const [errors, setErrors] = useState([]);
-    const [course, setCourse] = useState({});
-  
-  //Getting the id from the UI
-    let {id} = useParams();
-  
-    //Using Axios to get course data and user data
-    useEffect(() =>  {
-     //fetching from API and geting the post state
-      axios
-        .get(config.apiBaseUrl+`/courses/${id}`)
-        .then((response) => {
-  
-         setCourse(response.data);
-        })
-        .catch((errors) => {
-          console.log("Course ID not found", errors);
-          history.push("/notfound");
-        });
-    },[]);
+//exporting CourseDetail function
+export default function CourseDetail({ context, history }) {
+  //This stores the errors and courses
+  const [errors, setErrors] = useState([]);
+  const [course, setCourse] = useState({});
 
-        //if user is authenticated they can delete a course
-   const deleteCourse = () => {
+  //Getting the id from the UI
+  let { id } = useParams();
+
+  //Using Axios to get course data and user data
+  useEffect(() => {
+    //fetching from API and geting the post state
+    axios
+      .get(config.apiBaseUrl + `/courses/${id}`)
+      .then((response) => {
+        setCourse(response.data);
+      })
+      .catch((errors) => {
+        console.log("Course ID not found", errors);
+        history.push("/notfound");
+      });
+  }, []);
+
+  //if user is authenticated they can delete a course
+  const deleteCourse = () => {
     const authUser = context.authenticatedUser;
     context.data
       .deleteCourse(id, authUser.emailAddress, authUser.password)
@@ -47,20 +47,17 @@ export default function CourseDetail({context , history})  {
         history.push("/error"); // sends user to Error page
       });
   };
-
-
   //Setting authenticated User to a variable
-    const authUser = context.authenticatedUser;
-    return (
-      <React.Fragment>
-          {errors.length > 0 ? (
+  const authUser = context.authenticatedUser;
+  return (
+    <React.Fragment>
+      {errors.length > 0 ? (
         <Errors errors={errors} />
       ) : (
         <>
-        <div className="actions--bar">
-          <div className="wrap">
-            {                  
-              authUser ? (
+          <div className="actions--bar">
+            <div className="wrap">
+              {authUser ? (
                 //checking if the user course user is defined
                 authUser.id === course?.User?.id ? (
                   <React.Fragment>
@@ -99,45 +96,43 @@ export default function CourseDetail({context , history})  {
                     Return to List{" "}
                   </Link>
                 </React.Fragment>
-              )
-            }
-          </div>
-        </div>
-        <div className="wrap">
-          <h1> Course Detail </h1>
-          <form>
-            <div className="main--flex">
-              <div>
-                <h4 className="course--detail--title">Course</h4>
-                <h3 className="course--name">{course.title}</h3>
-                <span>
-                  {" "}
-                  By {course?.User?.firstName} {course?.User?.lastName}{" "}
-                </span>
-                <ReactMarkdown children={course.description} />
-              </div>
-              <div>
-                <h3 className="course--detail--title"> Estimated Time </h3>
-                {course.estimatedTime === null ||
-                course.estimatedTime === "" ? (
-                  <p> " " </p>
-                ) : (
-                  <p> {course.estimatedTime} </p>
-                )}
-                <h3 className="course--detail--title"> Materials Needed </h3>
-                {course.materialsNeeded === null ||
-                course.materialsNeeded === "" ? (
-                  <p> " " </p>
-                ) : (
-                  <ReactMarkdown children={course.materialsNeeded} />
-                )}
-              </div>
+              )}
             </div>
-          </form>
-        </div>
-        </>)}
-      </React.Fragment>
-    );
-  }
-
-
+          </div>
+          <div className="wrap">
+            <h1> Course Detail </h1>
+            <form>
+              <div className="main--flex">
+                <div>
+                  <h4 className="course--detail--title">Course</h4>
+                  <h3 className="course--name">{course.title}</h3>
+                  <span>
+                    {" "}
+                    By {course?.User?.firstName} {course?.User?.lastName}{" "}
+                  </span>
+                  <ReactMarkdown children={course.description} />
+                </div>
+                <div>
+                  <h3 className="course--detail--title"> Estimated Time </h3>
+                  {course.estimatedTime === null ||
+                  course.estimatedTime === "" ? (
+                    <p> " " </p>
+                  ) : (
+                    <p> {course.estimatedTime} </p>
+                  )}
+                  <h3 className="course--detail--title"> Materials Needed </h3>
+                  {course.materialsNeeded === null ||
+                  course.materialsNeeded === "" ? (
+                    <p> " " </p>
+                  ) : (
+                    <ReactMarkdown children={course.materialsNeeded} />
+                  )}
+                </div>
+              </div>
+            </form>
+          </div>
+        </>
+      )}
+    </React.Fragment>
+  );
+}

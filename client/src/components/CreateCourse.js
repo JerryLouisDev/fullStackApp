@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Form from "./Form";
-// import Errors from "./Errors";
 //Exporting reacts useState to use react compoents in this function
 export default function CreateCourse({ context, location, history }) {
   const [errors, setErrors] = useState([]);

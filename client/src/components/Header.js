@@ -10,7 +10,7 @@ export default class Header extends React.PureComponent {
         <div className="wrap header">
           <div className="header--flex">
             <h1 className="header--logo">
-              <a href="/">Courses </a>
+              <a href="/">Apex Academy Courses</a>
             </h1>
             <nav>
               {authUser ? (

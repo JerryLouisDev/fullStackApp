@@ -1,35 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Form from "./Form";
-
-export default function CreateCourse() {
-  let history = useHistory();
+// import Errors from "./Errors";
+//Exporting reacts useState to use react compoents in this function
+export default function CreateCourse({ context, location, history }) {
+  const [errors, setErrors] = useState([]);
   const [title, setTitle] = useState("");
-  const [errors, setErrors] = useState("");
+  const [estimatedTime, setEstimatedTime] = useState("");
   const [materialsNeeded, setMaterialsNeeded] = useState("");
   const [description, setDescription] = useState("");
-  const [estimatedTime, setEstimatedTime] = useState("");
-  const context = useContext(Context);
-  const authUser = context.authenticatedUser;
+// object destructuring authenticatedUser
+  const {
+    id: userId,
+    emailAddress,
+    firstName,
+    lastName,
+    password,
+  } = context.authenticatedUser;
 
-  const ctrlSubmit = () => {
-    const email = authUser.emailAddress;
-    const password = authUser.userPassword;
-    const authIDUser = authUser.id;
-
-    const theCourse = {
+  // when an authenticated user decides to submit
+  const submit = () => {
+    const { from } = location.state || { from: { pathname: "/" } };
+    const course = {
       title,
       description,
       estimatedTime,
       materialsNeeded,
       userId,
     };
+
     context.data
-      .createCourse(course, email, password)
+      .createCourse(course, emailAddress, password)
       .then((errors) => {
+        console.log(errors);
         if (errors.length) {
           setErrors(errors);
         } else {
-          history.push("/");
+          history.push(from);
+          console.log(`Yurrrr! The course is created!`);
         }
       })
       .catch((error) => {
@@ -37,65 +44,54 @@ export default function CreateCourse() {
         history.push("/error");
       });
   };
-  const onChange = (e) => {
-    const val = e.target.value;
-    const name = e.target.name;
 
-    updateCourseState({
-      ...course,
-      [name]: val,
-    });
-
-    if (name === "courseTitle") {
-      name = "title";
-    } else if (name === "courseDescription") {
-      name = "description";
-    }
+  //returns to list of courses when cancelled
+  const cancel = () => {
+    history.push("/");
   };
+
   return (
     <main>
       <div className="wrap">
         <h2>Create Course</h2>
         <Form
-          cancel={this.cancel}
-          errors={this.errors}
-          submit={this.submit}
+          cancel={cancel}
+          errors={errors}
+          submit={submit}
           submitButtonText="Create Course"
           elements={() => (
-            <>
+            <React.Fragment>
               <div className="main--flex">
                 <div>
                   <label>
-                    {""}
+                    {" "}
                     Course Title
                     <input
                       id="title"
                       name="title"
                       type="text"
                       value={title}
-                      onChange={this.change}
+                      onChange={(e) => setTitle(e.target.value)}
                       placeholder="Title"
                     />
                   </label>
                   <p>
                     {" "}
-                    By
-                    {authUser.firstName} {authUser.lastName}
+                    By {firstName} {lastName}{" "}
                   </p>
-
                   <label>
-                    Course Description
+                    {" "}
+                    Description
                     <textarea
                       id="description"
                       name="description"
                       type="text"
                       value={description}
-                      onChange={this.change}
+                      onChange={(e) => setDescription(e.target.value)}
                       placeholder="Description"
                     />
                   </label>
                 </div>
-
                 <div>
                   <label>
                     {" "}
@@ -105,7 +101,7 @@ export default function CreateCourse() {
                       name="estimatedTime"
                       type="text"
                       value={estimatedTime}
-                      onChange={this.change}
+                      onChange={(e) => setEstimatedTime(e.target.value)}
                       placeholder="Estimated Time"
                     />
                   </label>
@@ -117,13 +113,13 @@ export default function CreateCourse() {
                       name="materialsNeeded"
                       type="text"
                       value={materialsNeeded}
-                      onChange={this.change}
+                      onChange={(e) => setMaterialsNeeded(e.target.value)}
                       placeholder="Materials Needed"
                     />
-                </label>
+                  </label>
                 </div>
               </div>
-            </>
+            </React.Fragment>
           )}
         />
       </div>

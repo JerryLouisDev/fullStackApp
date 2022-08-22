@@ -1,41 +1,39 @@
-import React, { Component } from "react";
+import React, { useEffect,useState } from "react";
 import { Link } from "react-router-dom";
 import config from "../config";
+import axios from "axios";
 
-export default class Courses extends Component {
-  state = {
-    courses: [],
-  };
+export default function Courses({history})  {
+  const [courses, setCourses] = useState([])
 
-  componentDidMount() {
-    fetch(config.apiBaseUrl + "/courses")
-      .then((res) => res.json())
+  useEffect(() => {
+    axios
+   //searching the API
+    .get(config.apiBaseUrl+"/courses")
       .then((response) => {
-        this.setState({
-          courses: response.data,
-        });
+        setCourses(response.data);
       })
-      .catch((error) => {
-        console.log("Looks like we have an error: ", error);
-        this.props.history.push("/error");
+      .catch((errors) => {
+        console.log(errors);
+        history.push("/error");
       });
-  }
+  },[]);
 
-  render() {
-    const state = this.state;
+  //Return list of courses from API
     return (
-      <main>
+      <div>
         <div className="wrap main--grid">
-          {state.courses.map((course) => (
-            <link
+          {courses.map((course) => (
+            <Link
+              className="course--module course--link"
               key={course.id}
               to={`/courses/${course.id}`}
-              className="course--module course--link"
             >
               <h2 className="course--label"> Course </h2>
               <h3 className="course--title">{course.title} </h3>
-            </link>
+            </Link>
           ))}
+
           <Link
             className="course--module course--add--module"
             to="/courses/create"
@@ -49,16 +47,13 @@ export default class Courses extends Component {
                 viewBox="0 0 13 13"
                 className="add"
               >
-                <polygon 
-                points="7,6 7,0 6,0 6,6 0,6 0,7 6,7 6,13 7,13 7,7 13,7 13,6"
-                >
-                </polygon>
+                <polygon points="7,6 7,0 6,0 6,6 0,6 0,7 6,7 6,13 7,13 7,7 13,7 13,6 "></polygon>
               </svg>
-              Create New Course
+              Create Course
             </h3>
           </Link>
         </div>
-      </main>
+      </div>
     );
   }
-}
+
